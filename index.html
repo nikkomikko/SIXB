@@ -1,0 +1,713 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>For My Brother, Joshua</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #050505;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* =========================
+       INTRO / CODE SCREEN
+    ========================= */
+
+    #intro {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background:
+            radial-gradient(circle at center, #101b24 0%, #050505 70%);
+    }
+
+    .code-window {
+        width: min(850px, 100%);
+        background: #0c1014;
+        border: 1px solid #1c2a33;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 50px rgba(0, 170, 255, 0.08);
+    }
+
+    .window-top {
+        padding: 15px 20px;
+        background: #11171c;
+        border-bottom: 1px solid #1c272e;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #39434a;
+    }
+
+    .window-title {
+        margin-left: 10px;
+        color: #7f909b;
+        font-size: 13px;
+    }
+
+    .code-content {
+        padding: 25px;
+        min-height: 400px;
+        font-family: Consolas, monospace;
+        line-height: 1.8;
+        font-size: 16px;
+        white-space: pre-wrap;
+        color: #d8e1e6;
+    }
+
+    .keyword {
+        color: #00a8ff;
+    }
+
+    .string {
+        color: #00d9ff;
+    }
+
+    .comment {
+        color: #65737c;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 18px;
+        background: #00c8ff;
+        animation: blink 0.8s infinite;
+        vertical-align: middle;
+        box-shadow: 0 0 8px #00c8ff;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    .open-button {
+        display: none;
+        margin: 20px auto 30px;
+        padding: 14px 28px;
+        border: 1px solid #00a8ff;
+        background: transparent;
+        color: #00c8ff;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .open-button:hover {
+        background: #00a8ff;
+        color: white;
+        box-shadow: 0 0 25px #00a8ff;
+        transform: scale(1.05);
+    }
+
+    /* =========================
+       MAIN CONTENT
+    ========================= */
+
+    #main {
+        display: none;
+        opacity: 0;
+        min-height: 100vh;
+        text-align: center;
+        transition: opacity 1.5s ease;
+    }
+
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        position: relative;
+        background:
+            radial-gradient(circle at 50% 30%, #102b3b 0%, #080d11 35%, #030303 75%);
+    }
+
+    .message {
+        max-width: 750px;
+        z-index: 2;
+    }
+
+    .small-text {
+        color: #00bfff;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-bottom: 25px;
+    }
+
+    h1 {
+        font-size: clamp(3rem, 10vw, 7rem);
+        line-height: 0.95;
+        margin-bottom: 25px;
+        background: linear-gradient(135deg, #ffffff, #00cfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-text {
+        font-size: 18px;
+        color: #bfc9ce;
+        line-height: 1.8;
+    }
+
+    .scroll-text {
+        position: absolute;
+        bottom: 40px;
+        color: #64747d;
+        font-size: 12px;
+        letter-spacing: 3px;
+        animation: float 2s infinite ease-in-out;
+    }
+
+    @keyframes float {
+        50% {
+            transform: translateY(8px);
+        }
+    }
+
+    /* =========================
+       LETTER SECTION
+    ========================= */
+
+    .letter-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px;
+        background: #06090b;
+    }
+
+    .letter {
+        max-width: 800px;
+        padding: 50px 35px;
+        border-radius: 20px;
+        background: linear-gradient(145deg, #11181d, #080b0d);
+        border: 1px solid #1b2a32;
+        box-shadow: 0 0 80px rgba(0, 170, 255, 0.08);
+        text-align: left;
+    }
+
+    .letter h2 {
+        font-size: 35px;
+        margin-bottom: 30px;
+        color: #00c8ff;
+    }
+
+    .letter p {
+        color: #c1c9cd;
+        font-size: 17px;
+        line-height: 1.9;
+        margin-bottom: 20px;
+    }
+
+    /* =========================
+       HEART TREE
+    ========================= */
+
+    .tree-section {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at center, #08202c 0%, #05090c 55%, #020202 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #treeCanvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .tree-title {
+        position: absolute;
+        top: 8%;
+        z-index: 2;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .tree-title h2 {
+        font-size: clamp(2rem, 6vw, 4rem);
+        color: white;
+    }
+
+    .tree-title p {
+        color: #00c8ff;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .final-message {
+        position: absolute;
+        bottom: 8%;
+        z-index: 2;
+        max-width: 600px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .final-message p {
+        color: #d2d9dc;
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    .signature {
+        margin-top: 20px;
+        color: #00c8ff !important;
+        font-size: 20px !important;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+        .code-content {
+            font-size: 13px;
+            min-height: 350px;
+            padding: 20px;
+        }
+
+        .letter {
+            padding: 35px 25px;
+        }
+
+        .letter h2 {
+            font-size: 28px;
+        }
+
+        .letter p {
+            font-size: 15px;
+        }
+
+        .hero-text {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+
+<section id="intro">
+
+    <div class="code-window">
+
+        <div class="window-top">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+
+            <div class="window-title">
+                message_for_joshua.html
+            </div>
+        </div>
+
+        <div class="code-content" id="codeText"></div>
+
+        <button class="open-button" id="openButton">
+            Run the message →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN WEBSITE -->
+
+<main id="main">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="message">
+
+            <div class="small-text">
+                For Joshua Bernal
+            </div>
+
+            <h1>
+                Thank You,<br>
+                Bro.
+            </h1>
+
+            <p class="hero-text">
+                This isn't a birthday message.
+                There isn't any special occasion.
+                I just want you to know something.
+            </p>
+
+        </div>
+
+        <div class="scroll-text">
+            SCROLL TO CONTINUE ↓
+        </div>
+
+    </section>
+
+
+    <!-- LETTER -->
+
+    <section class="letter-section">
+
+        <div class="letter">
+
+            <h2>To my best brother ever,</h2>
+
+            <p>
+                Thank you so much for everything, bro.
+                Honestly, I don't think I'll ever have enough words
+                to completely explain how grateful I am to have you
+                in my life.
+            </p>
+
+            <p>
+                You've helped me in ways you probably don't even realize.
+                Through your advice, your presence, and the way you've
+                been there for me, you've made a real difference in my life.
+                I've learned a lot from you, and when I look at myself now,
+                I can see how much I've changed and grown.
+            </p>
+
+            <p>
+                And you know how proud I am of you, bro.
+                I've always believed in you. I know you're capable of
+                great things, and I hope you never stop chasing the life
+                and dreams you want.
+            </p>
+
+            <p>
+                You deserve happiness, success, peace, and all the good
+                things that life can give you. No matter where life takes us,
+                I hope you remember that you will always have someone here
+                who appreciates you and is proud to call you family.
+            </p>
+
+            <p>
+                I may not say it all the time, but you've become one of
+                the most important people in my life. Thank you for the
+                advice, the memories, the lessons, and for simply being
+                my brother.
+            </p>
+
+            <p>
+                I wish you all the best, bro. Always.
+            </p>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+    /* =========================
+       TYPING INTRO
+    ========================= */
+
+    const codeText = document.getElementById("codeText");
+    const openButton = document.getElementById("openButton");
+
+    const lines = [
+        '<span class="comment">// A simple message for my brother</span>\n',
+        '<span class="keyword">const</span> brother = <span class="string">"Joshua Bernal"</span>;\n\n',
+
+        '<span class="keyword">const</span> message = {\n',
+        '    gratitude: <span class="string">"Thank you for everything"</span>,\n',
+        '    pride: <span class="string">"You know how proud I am of you"</span>,\n',
+        '    wish: <span class="string">"I wish you nothing but the best"</span>\n',
+        '};\n\n',
+
+        '<span class="comment">// Some things are better said from the heart.</span>\n\n',
+
+        '<span class="keyword">if</span> (brother === <span class="string">"Joshua Bernal"</span>) {\n',
+        '    <span class="keyword">console</span>.log(<span class="string">"Thank you, bro."</span>);\n',
+        '}\n'
+    ];
+
+    let lineIndex = 0;
+
+    function typeLine() {
+
+        if (lineIndex < lines.length) {
+
+            codeText.innerHTML += lines[lineIndex];
+            lineIndex++;
+
+            setTimeout(typeLine, 350);
+
+        } else {
+
+            codeText.innerHTML += '<span class="cursor"></span>';
+
+            setTimeout(() => {
+                openButton.style.display = "block";
+            }, 800);
+
+        }
+
+    }
+
+    typeLine();
+
+
+    /* =========================
+       OPEN WEBSITE
+    ========================= */
+
+    openButton.addEventListener("click", () => {
+
+        document.getElementById("intro").style.display = "none";
+
+        const main = document.getElementById("main");
+
+        main.style.display = "block";
+
+        setTimeout(() => {
+            main.style.opacity = "1";
+        }, 100);
+
+    });
+
+
+    /* =========================
+       HEART TREE ANIMATION
+    ========================= */
+
+    const canvas = document.getElementById("treeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let width;
+    let height;
+
+    let petals = [];
+
+    function resizeCanvas() {
+
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+
+        createHeart();
+
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+
+    /* CREATE HEART */
+
+    function createHeart() {
+
+        petals = [];
+
+        const centerX = width / 2;
+        const centerY = height / 2.2;
+
+        const scale = Math.min(width, height) / 28;
+
+        for (let i = 0; i < 550; i++) {
+
+            const t = Math.random() * Math.PI * 2;
+
+            // Heart formula
+
+            const x =
+                16 * Math.pow(Math.sin(t), 3);
+
+            const y =
+                13 * Math.cos(t)
+                - 5 * Math.cos(2 * t)
+                - 2 * Math.cos(3 * t)
+                - Math.cos(4 * t);
+
+            const randomScale = Math.random();
+
+            const finalX =
+                centerX +
+                x * scale * randomScale;
+
+            const finalY =
+                centerY -
+                y * scale * randomScale;
+
+            petals.push({
+                x: finalX,
+                y: finalY,
+                size: Math.random() * 3 + 2,
+                alpha: 0,
+                speed: Math.random() * 0.02 + 0.005
+            });
+
+        }
+
+    }
+
+
+    /* DRAW TREE */
+
+    function drawTree() {
+
+        ctx.strokeStyle = "#35444d";
+        ctx.lineWidth = 10;
+        ctx.lineCap = "round";
+
+        const startX = width / 2;
+        const startY = height * 0.82;
+
+        const trunkTopY = height * 0.48;
+
+        ctx.beginPath();
+
+        ctx.moveTo(startX, startY);
+
+        ctx.bezierCurveTo(
+            startX - 10,
+            height * 0.70,
+            startX + 10,
+            height * 0.60,
+            startX,
+            trunkTopY
+        );
+
+        ctx.stroke();
+
+        drawBranch(
+            startX,
+            height * 0.62,
+            startX - width * 0.12,
+            height * 0.48,
+            7
+        );
+
+        drawBranch(
+            startX,
+            height * 0.62,
+            startX + width * 0.12,
+            height * 0.48,
+            7
+        );
+
+        drawBranch(
+            startX,
+            height * 0.55,
+            startX - width * 0.18,
+            height * 0.40,
+            5
+        );
+
+        drawBranch(
+            startX,
+            height * 0.55,
+            startX + width * 0.18,
+            height * 0.40,
+            5
+        );
+
+    }
+
+
+    function drawBranch(x1, y1, x2, y2, size) {
+
+        ctx.strokeStyle = "#35444d";
+        ctx.lineWidth = size;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.stroke();
+
+    }
+
+
+    /* DRAW PETALS */
+
+    function animateTree() {
+
+        ctx.clearRect(0, 0, width, height);
+
+        drawTree();
+
+        petals.forEach(petal => {
+
+            if (petal.alpha < 1) {
+
+                petal.alpha += petal.speed;
+
+            }
+
+            ctx.beginPath();
+
+            ctx.fillStyle =
+                `rgba(0, 200, 255, ${petal.alpha})`;
+
+            ctx.arc(
+                petal.x,
+                petal.y,
+                petal.size,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        });
+
+        requestAnimationFrame(animateTree);
+
+    }
+
+
+    resizeCanvas();
+    animateTree();
+
+</script>
+
+</body>
+</html>
+```
